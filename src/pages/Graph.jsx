@@ -168,12 +168,12 @@ function Graph() {
           <input
             type="number"
             placeholder="Enter Y value"
-            className="p-4 border border-gray-300 rounded-full text-center text-lg focus:outline-none focus:border-blue-400 w-full max-w-sm"
+            className="p-4 border border-gray-300 rounded-full text-center text-lg focus:outline-none focus:border-blue-400 w-1/4 max-w-sm"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
           />
           <button
-            className="bg-blue-500 text-white px-6 py-4 rounded-full text-lg font-semibold hover:bg-blue-600 transition focus:outline-none shadow-lg"
+            className="bg-blue-500 text-white px-6 py-4 rounded-full text-lg font-semibold hover:bg-blue-600 transition focus:outline-none shadow-lg w-full"
             onClick={addPoint}
           >
             Add a Point
