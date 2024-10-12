@@ -34,8 +34,8 @@ function GraphList() {
   const [graphs, setGraphs] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [newGraphTitle, setNewGraphTitle] = useState('');
-  const [newXLabel, setNewXLabel] = useState('');
-  const [newYLabel, setNewYLabel] = useState('');
+  const [newXValue, setNewXValue] = useState('Day');
+  const [newYValue, setNewYValue] = useState('Count');
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const userId = auth.currentUser?.uid;
@@ -48,7 +48,14 @@ function GraphList() {
           const userDoc = await getDoc(userDocRef);
           if (userDoc.exists()) {
             const userData = userDoc.data();
-            setGraphs(userData.graphs || []);
+            let graphsData = userData.graphs || [];
+            
+            // Check if graphsData is an object and convert it to an array
+            if (typeof graphsData === 'object' && !Array.isArray(graphsData)) {
+              graphsData = Object.values(graphsData);
+            }
+  
+            setGraphs(graphsData);
           } else {
             setError('User document does not exist');
           }
@@ -58,7 +65,7 @@ function GraphList() {
         }
       }
     };
-
+  
     fetchGraphs();
   }, [userId]);
 
@@ -68,27 +75,31 @@ function GraphList() {
       if (!user) {
         throw new Error('User not authenticated');
       }
-
+  
       const userDocRef = doc(firestore, 'users', user.uid);
       const userDoc = await getDoc(userDocRef);
-
+  
       if (userDoc.exists()) {
         const graphId = Date.now().toString();
         const newGraph = {
           graphId: graphId,
           title: newGraphTitle,
-          xLabel: newXLabel,
-          yLabel: newYLabel,
+          xValue: newXValue,
+          yValue: newYValue,
           data: [],
         };
-
-        // If the "graphs" field doesn't exist, create it as an array and add the new graph
+  
+        // Add the new graph to the Firestore document
         await updateDoc(userDocRef, {
           graphs: arrayUnion(newGraph),
         });
-
+  
         setGraphs((prevGraphs) => [...prevGraphs, newGraph]);
-        setShowForm(false);
+        setShowForm(false); // Hide the form after creating the graph
+        setNewGraphTitle('');
+        setNewXValue('');
+        setNewYValue('');
+  
         navigate(`/graph/${graphId}`);
       } else {
         throw new Error('User document does not exist');
@@ -98,9 +109,16 @@ function GraphList() {
       setError(error.message);
     }
   };
+  
+  // Existing Graph Click Handler
+  const handleGraphClick = (graphId) => {
+    setShowForm(false); // Ensure form is hidden
+    navigate(`/graph/${graphId}`);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-teal-100 to-blue-100 flex flex-col items-center justify-center p-8">
+
       <div className="w-full max-w-4xl bg-white rounded-3xl shadow-xl p-10">
         <h1 className="text-4xl font-extrabold text-gray-700 mb-10 text-center">Your Graphs</h1>
         {error && <p className="text-red-500 text-center mb-4">{error}</p>}
@@ -109,11 +127,11 @@ function GraphList() {
             <div
               key={graph.graphId}
               className="bg-white p-6 rounded-3xl shadow-lg cursor-pointer hover:bg-gray-100 transition"
-              onClick={() => navigate(`/graph/${graph.graphId}`)}
+              onClick={() => handleGraphClick(graph.graphId)}
             >
               <h2 className="text-2xl font-bold text-gray-800 mb-2">{graph.title}</h2>
-              <p className="text-gray-600">X-Axis: {graph.xLabel}</p>
-              <p className="text-gray-600">Y-Axis: {graph.yLabel}</p>
+              <p className="text-gray-600">X-Axis: {graph.xValue}</p>
+              <p className="text-gray-600">Y-Axis: {graph.yValue}</p>
             </div>
           ))}
           <div
@@ -126,41 +144,60 @@ function GraphList() {
             </div>
           </div>
         </div>
-        {showForm && (
-          <div className="mt-10">
+      </div>
+
+      {showForm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-8 rounded-3xl shadow-xl w-full max-w-md">
             <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">Create New Graph</h2>
             <div className="grid gap-6 mb-8">
-              <input
-                type="text"
-                placeholder="Graph Title"
-                className="p-4 border border-gray-300 rounded-full text-center text-lg focus:outline-none focus:border-blue-400"
-                value={newGraphTitle}
-                onChange={(e) => setNewGraphTitle(e.target.value)}
-              />
-              <input
-                type="text"
-                placeholder="X-Axis Label"
-                className="p-4 border border-gray-300 rounded-full text-center text-lg focus:outline-none focus:border-blue-400"
-                value={newXLabel}
-                onChange={(e) => setNewXLabel(e.target.value)}
-              />
-              <input
-                type="text"
-                placeholder="Y-Axis Label"
-                className="p-4 border border-gray-300 rounded-full text-center text-lg focus:outline-none focus:border-blue-400"
-                value={newYLabel}
-                onChange={(e) => setNewYLabel(e.target.value)}
-              />
+              <div className="flex flex-col items-start">
+                <label htmlFor="newGraphTitle" className="ml-6">Graph Title</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="Graph Title"
+                  className="p-4 border border-gray-300 rounded-full text-center text-lg focus:outline-none focus:border-blue-400 w-full"
+                  value={newGraphTitle}
+                  onChange={(e) => setNewGraphTitle(e.target.value)}
+                />
+              </div>
+              <div className="flex flex-col items-start">
+                <label htmlFor="newGraphTitle" className="ml-6">Y-Axis Label</label>
+                <input
+                  type="text"
+                  placeholder="X-Axis Label"
+                  className="p-4 border border-gray-300 rounded-full text-center text-lg focus:outline-none focus:border-blue-400 w-full"
+                  value={newXValue}
+                  onChange={(e) => setNewXValue(e.target.value)}
+                />
+              </div>
+              <div className="flex flex-col items-start">
+                <label htmlFor="newGraphTitle" className="ml-6">X-Axis Label</label>
+                <input
+                  type="text"
+                  placeholder="Y-Axis Label"
+                  className="p-4 border border-gray-300 rounded-full text-center text-lg focus:outline-none focus:border-blue-400 w-full"
+                  value={newYValue}
+                  onChange={(e) => setNewYValue(e.target.value)}
+                />
+              </div>
               <button
                 className="bg-blue-500 text-white px-6 py-4 rounded-full text-lg font-semibold hover:bg-blue-600 transition focus:outline-none shadow-lg"
                 onClick={handleCreateGraph}
               >
                 Create Graph
               </button>
+              <button
+                className="bg-red-500 text-white px-6 py-4 rounded-full text-lg font-semibold hover:bg-red-600 transition focus:outline-none shadow-lg"
+                onClick={() => setShowForm(false)}
+              >
+                Cancel
+              </button>
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }
