@@ -4,9 +4,11 @@ import { auth } from './firebase';
 import './index.css';
 import './App.css';
 import Graph from './pages/Graph';
+import Home from './pages/Home';
 import SignUpOrSignIn from './pages/SignUpOrSignIn';
 import GraphList from './pages/GraphList';
 import ProtectedRoute from './components/ProtectedRoute';
+import Header from './components/Header';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -25,21 +27,9 @@ function App() {
 
   return (
     <Router>
-      <div className="header absolute w-full shadow-lg bg-white flex px-12 py-4 justify-between">
-        <h1 className="text-3xl font-black">Graph Anything</h1>
-        <div className="flex gap-2 items-center">
-          {user && (
-            <>
-              <p className="user-email">Logged in as: {user.displayName}</p>
-              <button className="px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-600 rounded-lg hover:bg-blue-500 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80" onClick={handleLogout}>
-                Logout
-              </button>
-            </>
-          )}
-        </div>
-        
-      </div>
+      <Header user={user} handleLogout={handleLogout}/>
       <Routes>
+        <Route path="/" element={<Home />} />
         <Route path="/graphlist" element={<ProtectedRoute element={GraphList} />} />
         <Route path="/graph/:graphId" element={<ProtectedRoute element={Graph} />} />
         <Route path="/signup" element={<SignUpOrSignIn />} />
