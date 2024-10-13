@@ -97,7 +97,6 @@ function Graph() {
   const addPoint = async () => {
     if (inputValue && graph) {
       try {
-        console.log("Graph data: ", graph.data)
         const updatedData = [...(graph.data || []), parseFloat(inputValue)];
 
   
@@ -218,9 +217,6 @@ function Graph() {
     ],
   };
 
-  console.log("ChartData Dataset:", chartData.datasets[0].data); // Add this line to see the data being passed to chart
-
-
   const chartOptions = {
     responsive: true,
     plugins: {
@@ -275,7 +271,7 @@ function Graph() {
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-teal-100 to-blue-100 flex flex-col items-center justify-center p-8">
-      <div className="w-full bg-white rounded-3xl shadow-xl p-10 relative">
+      <div className="w-full bg-white rounded-3xl shadow-xl p-10 relative max-w-6xl">
         <div className="absolute top-4 right-4 text-gray-500 hover:text-gray-800 cursor-pointer" onClick={(e) => {e.stopPropagation(); openSettingsModal(graph);}}><FiSettings size={24} /></div>
         <div className="absolute top-4 left-4 text-gray-500 hover:text-gray-800 cursor-pointer" onClick={() => navigate('/graphlist')}><FiArrowLeft size={24} /></div>
         <div className="flex w-full justify-center items-center gap-2">

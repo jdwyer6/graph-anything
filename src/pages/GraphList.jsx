@@ -17,6 +17,8 @@ import { getFirestore, doc, getDoc, updateDoc, arrayUnion } from 'firebase/fires
 import { useNavigate } from 'react-router-dom';
 import data from '@emoji-mart/data'
 import Picker from '@emoji-mart/react'
+import resolveConfig from 'tailwindcss/resolveConfig';
+import tailwindConfig from '../../tailwind.config';
 
 // Register Chart.js components
 ChartJS.register(
@@ -42,6 +44,8 @@ function GraphList() {
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const userId = auth.currentUser?.uid;
+  const fullConfig = resolveConfig(tailwindConfig);
+  const borderColor = fullConfig.theme.colors['brand-primary'];
 
   useEffect(() => {
     const fetchGraphs = async () => {
@@ -116,10 +120,9 @@ function GraphList() {
       setError(error.message);
     }
   };
-  
-  // Existing Graph Click Handler
+
   const handleGraphClick = (graphId) => {
-    setShowForm(false); // Ensure form is hidden
+    setShowForm(false); 
     navigate(`/graph/${graphId}`);
   };
 
@@ -150,7 +153,7 @@ function GraphList() {
                       {
                         label: graph.title,
                         data: graph.data.length ? graph.data : [0, 2, 1, 3], // Placeholder data if no data is present
-                        borderColor: '#388087',
+                        borderColor: borderColor,
                         borderWidth: 2,
                         fill: false,
                         pointRadius: 2,

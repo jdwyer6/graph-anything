@@ -2,8 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { auth, googleProvider } from '../firebase';
-import { createUserWithEmailAndPassword, signInWithPopup, signInWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth';
-import { getFirestore, collection, query, getDocs, setDoc, doc } from 'firebase/firestore';
+import { createUserWithEmailAndPassword, signInWithPopup, signInWithEmailAndPassword, sendPasswordResetEmail, getAuth, GoogleAuthProvider } from 'firebase/auth';
+import { getFirestore, setDoc, doc, getDoc} from 'firebase/firestore';
 import 'tailwindcss/tailwind.css';
 
 // Initialize Firestore
@@ -13,40 +13,20 @@ function SignUpOrSignIn() {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
+  const [displayName, setdisplayName] = useState('');
   const [error, setError] = useState('');
   const [isSignUp, setIsSignUp] = useState(true);
+  const provider = new GoogleAuthProvider();
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
-        navigate('/graphlist'); // Redirect to graph if user is signed in
+        navigate('/graphlist'); 
       }
     });
 
     return () => unsubscribe();
   }, [navigate]);
-
-  useEffect(() => {
-    logUsersCollection();
-  }, []);
-
-  const logUsersCollection = async () => {
-    try {
-      const q = query(collection(firestore, 'users'));
-      const querySnapshot = await getDocs(q);
-      const items = [];
-      querySnapshot.forEach((doc) => {
-        items.push({ id: doc.id, ...doc.data() });
-      });
-      console.log(items);
-    } catch (error) {
-      console.error('Error fetching users collection:', error);
-      setError('Missing or insufficient permissions to access users collection.');
-    }
-  };
-
 
   const handleSignUp = async (e) => {
     e.preventDefault();
@@ -54,11 +34,11 @@ function SignUpOrSignIn() {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      // Create user document in Firestore
+      await updateProfile(user, { displayName: displayName });
+ 
       await setDoc(doc(firestore, 'users', user.uid), {
         email: user.email,
-        firstName: firstName,
-        lastName: lastName,
+        displayName: displayName,
       });
 
       navigate('/graphlist');
@@ -79,17 +59,28 @@ function SignUpOrSignIn() {
 
   const handleGoogleSignIn = async () => {
     try {
-      const result = await signInWithPopup(auth, googleProvider);
+      const result = await signInWithPopup(auth, provider);
       const user = result.user;
-
-      // Create user document in Firestore if it doesn't exist
-      await setDoc(doc(firestore, 'users', user.uid), {
-        email: user.email,
-      }, { merge: true });
-
-      navigate('/graphlist');
+  
+      // Check if the user already exists in the database
+      const userDocRef = doc(firestore, 'users', user.uid);
+      const userDoc = await getDoc(userDocRef);
+  
+      if (userDoc.exists()) {
+        // User exists, sign them in
+        console.log('User already exists, signing in...');
+      } else {
+        // User does not exist, create a new account
+        await setDoc(userDocRef, {
+          uid: user.uid,
+          email: user.email,
+          displayName: user.displayName,
+          // Add any other user data you want to save
+        });
+        console.log('New user created');
+      }
     } catch (error) {
-      setError(error.message);
+      console.error('Error signing in with Google:', error);
     }
   };
 
@@ -118,16 +109,10 @@ function SignUpOrSignIn() {
             <>
               <input
                 type="text"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-                placeholder="First Name"
-                className="w-full p-4 border border-gray-300 rounded-full text-lg focus:outline-none focus:border-blue-400 text-center"
-              />
-              <input
-                type="text"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-                placeholder="Last Name"
+                value={displayName}
+                required
+                onChange={(e) => setdisplayName(e.target.value)}
+                placeholder="Name"
                 className="w-full p-4 border border-gray-300 rounded-full text-lg focus:outline-none focus:border-blue-400 text-center"
               />
             </>
@@ -135,6 +120,7 @@ function SignUpOrSignIn() {
           <input
             type="email"
             value={email}
+            required
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Email"
             className="w-full p-4 border border-gray-300 rounded-full text-lg focus:outline-none focus:border-blue-400 text-center"
@@ -142,6 +128,7 @@ function SignUpOrSignIn() {
           <input
             type="password"
             value={password}
+            required
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
             className="w-full p-4 border border-gray-300 rounded-full text-lg focus:outline-none focus:border-blue-400 text-center"

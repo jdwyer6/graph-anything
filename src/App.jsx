@@ -25,15 +25,19 @@ function App() {
 
   return (
     <Router>
-      <div className="header">
-        {user && (
-          <>
-            <p className="user-email">Logged in as: {user.email}</p>
-            <button className="logout-button" onClick={handleLogout}>
-              Logout
-            </button>
-          </>
-        )}
+      <div className="header absolute w-full shadow-lg bg-white flex px-12 py-4 justify-between">
+        <h1 className="text-3xl font-black">Graph Anything</h1>
+        <div className="flex gap-2 items-center">
+          {user && (
+            <>
+              <p className="user-email">Logged in as: {user.displayName}</p>
+              <button className="px-6 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-600 rounded-lg hover:bg-blue-500 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80" onClick={handleLogout}>
+                Logout
+              </button>
+            </>
+          )}
+        </div>
+        
       </div>
       <Routes>
         <Route path="/graphlist" element={<ProtectedRoute element={GraphList} />} />
