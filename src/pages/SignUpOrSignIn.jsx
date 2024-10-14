@@ -1,9 +1,9 @@
 // src/pages/SignUpOrSignIn.jsx
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { auth, googleProvider } from '../firebase';
-import { createUserWithEmailAndPassword, signInWithPopup, signInWithEmailAndPassword, sendPasswordResetEmail, getAuth, GoogleAuthProvider } from 'firebase/auth';
-import { getFirestore, setDoc, doc, getDoc} from 'firebase/firestore';
+import { createUserWithEmailAndPassword, signInWithPopup, signInWithEmailAndPassword, sendPasswordResetEmail, getAuth, GoogleAuthProvider, updateProfile } from 'firebase/auth';
+import { getFirestore, setDoc, doc, getDoc } from 'firebase/firestore';
 import 'tailwindcss/tailwind.css';
 
 // Initialize Firestore
@@ -11,9 +11,10 @@ const firestore = getFirestore();
 
 function SignUpOrSignIn() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [displayName, setdisplayName] = useState('');
+  const [displayName, setDisplayName] = useState('');
   const [error, setError] = useState('');
   const [isSignUp, setIsSignUp] = useState(true);
   const provider = new GoogleAuthProvider();
@@ -28,6 +29,12 @@ function SignUpOrSignIn() {
     return () => unsubscribe();
   }, [navigate]);
 
+  useEffect(() => {
+    if (location.state && location.state.isSignUp === false) {
+      setIsSignUp(false);
+    }
+  }, [location.state]);
+
   const handleSignUp = async (e) => {
     e.preventDefault();
     try {
@@ -35,15 +42,18 @@ function SignUpOrSignIn() {
       const user = userCredential.user;
 
       await updateProfile(user, { displayName: displayName });
- 
-      await setDoc(doc(firestore, 'users', user.uid), {
+
+      const userDocRef = doc(firestore, 'users', user.uid);
+      await setDoc(userDocRef, {
+        uid: user.uid,
         email: user.email,
         displayName: displayName,
       });
 
       navigate('/graphlist');
     } catch (error) {
-      setError(error.message);
+      console.error('Error during sign up:', error);
+      setError('Failed to create account. Please try again later.');
     }
   };
 
@@ -53,7 +63,8 @@ function SignUpOrSignIn() {
       await signInWithEmailAndPassword(auth, email, password);
       navigate('/graphlist');
     } catch (error) {
-      setError(error.message);
+      console.error('Error during sign in:', error);
+      setError('Failed to sign in. Please check your credentials and try again.');
     }
   };
 
@@ -61,26 +72,25 @@ function SignUpOrSignIn() {
     try {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
-  
-      // Check if the user already exists in the database
+    
       const userDocRef = doc(firestore, 'users', user.uid);
       const userDoc = await getDoc(userDocRef);
   
       if (userDoc.exists()) {
-        // User exists, sign them in
         console.log('User already exists, signing in...');
       } else {
-        // User does not exist, create a new account
         await setDoc(userDocRef, {
           uid: user.uid,
           email: user.email,
           displayName: user.displayName,
-          // Add any other user data you want to save
         });
         console.log('New user created');
       }
+
+      navigate('/graphlist');
     } catch (error) {
       console.error('Error signing in with Google:', error);
+      setError('Failed to sign in with Google. Please try again later.');
     }
   };
 
@@ -111,7 +121,7 @@ function SignUpOrSignIn() {
                 type="text"
                 value={displayName}
                 required
-                onChange={(e) => setdisplayName(e.target.value)}
+                onChange={(e) => setDisplayName(e.target.value)}
                 placeholder="Name"
                 className="w-full p-4 border border-gray-300 rounded-full text-lg focus:outline-none focus:border-blue-400 text-center"
               />
