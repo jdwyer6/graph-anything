@@ -57,8 +57,8 @@ const Header = ({ user, handleLogout }) => {
           </>
         ) : (
             <div className="flex gap-2">
-                <button className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-blue-600" onClick={() =>navigate('/signup')}>Create an Account</button>
-                <button className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-blue-600" onClick={() => navigate('/signup')}>Sign In</button>
+                <button className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-blue-600" onClick={() =>navigate('/signup?isSignUp=true')}>Create an Account</button>
+                <button className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-blue-600" onClick={() => navigate('/signup?isSignUp=false')}>Sign In</button>
             </div>
         )}
       </div>

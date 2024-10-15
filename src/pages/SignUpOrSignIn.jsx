@@ -20,6 +20,12 @@ function SignUpOrSignIn() {
   const provider = new GoogleAuthProvider();
 
   useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const isSignUpParam = params.get('isSignUp');
+    setIsSignUp(isSignUpParam === 'true');
+  }, [location.search]);
+
+  useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
         navigate('/graphlist'); 
@@ -28,12 +34,6 @@ function SignUpOrSignIn() {
 
     return () => unsubscribe();
   }, [navigate]);
-
-  useEffect(() => {
-    if (location.state && location.state.isSignUp === false) {
-      setIsSignUp(false);
-    }
-  }, [location.state]);
 
   const handleSignUp = async (e) => {
     e.preventDefault();

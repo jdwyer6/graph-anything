@@ -19,6 +19,9 @@ export default {
         },
         'teal-light': 'teal-100',
         'blue-light': 'blue-100',
+        'gray-dark': '#262626',
+        'gray-neutral': '#a8a8a8',
+        'gray-light': '#f2f2f2',
       }
     },
   },

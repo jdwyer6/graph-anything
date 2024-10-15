@@ -23,7 +23,7 @@ function Home() {
         <div className="flex justify-center gap-6">
           <button
             className="bg-brand-primary text-white px-8 py-4 rounded-full text-xl font-semibold hover:bg-brand-primary-dark transition focus:outline-none shadow-lg"
-            onClick={() => navigate('/graphlist')}
+            onClick={() => navigate('/signup?isSignUp=true')}
           >
             Get Started
           </button>

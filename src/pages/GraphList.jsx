@@ -45,7 +45,7 @@ function GraphList() {
   const navigate = useNavigate();
   const userId = auth.currentUser?.uid;
   const fullConfig = resolveConfig(tailwindConfig);
-  const borderColor = fullConfig.theme.colors['brand-primary'];
+  const borderColor = fullConfig.theme.colors['brand-primary'].DEAFULT;
 
   useEffect(() => {
     const fetchGraphs = async () => {

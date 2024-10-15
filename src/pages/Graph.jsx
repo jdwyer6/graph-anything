@@ -16,6 +16,8 @@ import { auth } from '../firebase';
 import { getFirestore, doc, getDoc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
 import { useNavigate, useParams } from 'react-router-dom';
 import { FiSettings, FiArrowLeft } from 'react-icons/fi';
+import resolveConfig from 'tailwindcss/resolveConfig';
+import tailwindConfig from '../../tailwind.config';
 
 // Register Chart.js components
 ChartJS.register(
@@ -46,6 +48,9 @@ function Graph() {
   const userId = auth.currentUser?.uid;
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
+  const fullConfig = resolveConfig(tailwindConfig);
+  const brandPrimary = fullConfig.theme.colors['brand-primary'].DEFAULT;
+  const grayNeutral = fullConfig.theme.colors['gray-dark'];
 
   const fetchGraph = async (userId) => {
     if (userId && graphId) {
@@ -146,8 +151,8 @@ function Graph() {
           graphs: updatedGraphs,
         });
   
-        setGraphs(updatedGraphs); // Update the state with the filtered list
-        setShowSettings(false); // Hide the settings modal after deleting the graph
+        setGraphs(updatedGraphs);
+        setShowSettings(false);
         navigate('/graphlist');
       } else {
         throw new Error('User document does not exist');
@@ -157,7 +162,6 @@ function Graph() {
       setError(error.message);
     }
   };
-  
 
   const handleUpdateGraph = async () => {
     try {
@@ -208,10 +212,10 @@ function Graph() {
         label: 'Dataset',
         data: graph.data,
         fill: false,
-        borderColor: '#6A8D92',
+        borderColor: grayNeutral,
         borderWidth: 3,
         pointRadius: 6,
-        pointBackgroundColor: 'red',
+        pointBackgroundColor: brandPrimary,
         tension: 0.4,
       },
     ],
