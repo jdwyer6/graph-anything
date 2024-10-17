@@ -43,13 +43,13 @@ const Header = ({ user, handleLogout }) => {
             <Avatar name={user.displayName} size="40" round={true} onClick={toggleDropdown} className="cursor-pointer hover:shadow-lg hover:border" />
             {dropdownVisible && (
               <div ref={dropdownRef} className="absolute right-0 top-0 translate-y-1/4 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg">
-                <div className="px-4 py-2 text-gray-700 font-semibold border-b border-gray-200">
+                <div className="px-4 py-2 text-gray-700 font-semibold border-b border-gray-200 hover:cursor-pointer hover:bg-brand-primary hover:text-white hover:rounded-t-lg" onClick={() =>navigate('/graphlist')}>
                   {getPossessiveName(user.displayName)} Account
                 </div>
                 <ul className="py-1">
-                <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">My Graphs</li>
-                  <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">User Settings</li>
-                  <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Billing</li>
+                <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={() =>navigate('/graphlist')}>My Graphs</li>
+                  <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={() =>navigate('/')}>User Settings</li>
+                  <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={() =>navigate('/')}>Billing</li>
                   <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={handleLogout}>Logout</li>
                 </ul>
               </div>

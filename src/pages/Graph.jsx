@@ -255,7 +255,7 @@ function Graph() {
         },
       },
       y: {
-        beginAtZero: false,
+        beginAtZero: true,
         title: {
           display: true,
           text: graph.yValue,
@@ -279,7 +279,15 @@ function Graph() {
         <div className="absolute top-4 right-4 text-gray-500 hover:text-gray-800 cursor-pointer" onClick={(e) => {e.stopPropagation(); openSettingsModal(graph);}}><FiSettings size={24} /></div>
         <div className="absolute top-4 left-4 text-gray-500 hover:text-gray-800 cursor-pointer" onClick={() => navigate('/graphlist')}><FiArrowLeft size={24} /></div>
         <div className="flex w-full justify-center items-center gap-2">
-          <div className="text-6xl text-blue-500">{graph.emoji}</div>
+          <div className="flex items-center justify-center gap-2">
+            {graph.emoji ? (
+              typeof graph.emoji === 'string' && (graph.emoji.startsWith('/') || graph.emoji.startsWith('http'))
+                ? <img src={graph.emoji} alt="custom emoji" className="inline-block max-w-24" />
+                : <div className="text-blue-500 text-5xl">{graph.emoji}</div>
+            ) : (
+              'Select an emoji'
+            )}
+          </div>
           <h1 className="text-4xl font-extrabold text-gray-700 text-center">
             {graph.title}
           </h1>

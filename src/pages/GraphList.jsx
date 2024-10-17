@@ -19,6 +19,7 @@ import data from '@emoji-mart/data'
 import Picker from '@emoji-mart/react'
 import resolveConfig from 'tailwindcss/resolveConfig';
 import tailwindConfig from '../../tailwind.config';
+import { customEmojis } from '../utils/customEmojis';
 
 // Register Chart.js components
 ChartJS.register(
@@ -45,7 +46,7 @@ function GraphList() {
   const navigate = useNavigate();
   const userId = auth.currentUser?.uid;
   const fullConfig = resolveConfig(tailwindConfig);
-  const borderColor = fullConfig.theme.colors['brand-primary'].DEAFULT;
+  const borderColor = fullConfig.theme.colors['gray-dark'];
 
   useEffect(() => {
     const fetchGraphs = async () => {
@@ -76,8 +77,13 @@ function GraphList() {
   }, [userId]);
 
   const handleEmojiSelect = (emoji) => {
-    setSelectedEmoji(emoji.native);
+    if (emoji.native) {
+      setSelectedEmoji(emoji.native);
+    } else {
+      setSelectedEmoji(emoji.src);
+    }
   };
+  
 
   const handleCreateGraph = async () => {
     try {
@@ -135,24 +141,19 @@ function GraphList() {
           {graphs.map((graph) => (
             <div
               key={graph.graphId}
-              className="bg-white p-6 rounded-3xl shadow-lg cursor-pointer hover:bg-gray-100 transition"
+              className="bg-white p-6 rounded-3xl shadow-lg cursor-pointer hover:bg-gray-100 transition flex flex-col justify-around"
               onClick={() => handleGraphClick(graph.graphId)}
             >
-              <div>
-                <div className="text-6xl text-blue-500 mb-4">{graph.emoji}</div>
-                <h2 className="text-2xl font-bold text-gray-800 mb-2">{graph.title}</h2>
-              </div>
-
               {/* Graph Preview */}
-              <div className="h-40">
+              <div className="h-40 mb-4">
               {graph.data.length ? (
                 <Line
                   data={{
-                    labels: graph.data.map((_, index) => index + 1) || [1, 2, 3, 4], // Placeholder if no data
+                    labels: graph.data.map((_, index) => index + 1) || [1, 2, 3, 4],
                     datasets: [
                       {
                         label: graph.title,
-                        data: graph.data.length ? graph.data : [0, 2, 1, 3], // Placeholder data if no data is present
+                        data: graph.data.length ? graph.data : [0, 2, 1, 3],
                         borderColor: borderColor,
                         borderWidth: 2,
                         fill: false,
@@ -181,6 +182,16 @@ function GraphList() {
               ) : (
                 <p className="text-gray-500 text-center mt-4">Click to start adding data</p>
               )}
+              </div>
+              <div className="flex items-center justify-center gap-2">
+                {graph.emoji ? (
+                  typeof graph.emoji === 'string' && (graph.emoji.startsWith('/') || graph.emoji.startsWith('http'))
+                    ? <img src={graph.emoji} alt="custom emoji" className="inline-block max-w-24" />
+                    : <div className="text-blue-500 text-5xl">{graph.emoji}</div>
+                ) : (
+                  'Select an emoji'
+                )}
+                <h2 className="text-2xl font-bold text-gray-800">{graph.title}</h2>
               </div>
             </div>
           ))}
@@ -235,12 +246,16 @@ function GraphList() {
               <div className="flex items-start">
                 <div>
                   <label htmlFor="iconSelector">Select Emoji</label>
-                  <Picker data={data} onEmojiSelect={handleEmojiSelect} />
+                  <Picker data={data} onEmojiSelect={handleEmojiSelect} custom={customEmojis}/>
                 </div>
                 <div className="w-full h-full items-center flex justify-center">
                   {selectedEmoji ? (
-                    <div className="text-6xl text-blue-500 mb-4">{selectedEmoji}</div>
-                  ) : ('Select an emoji')}
+                    typeof selectedEmoji === 'string' && (selectedEmoji.startsWith('/') || selectedEmoji.startsWith('http'))
+                      ? <img src={selectedEmoji} alt="custom emoji" className="inline-block p-5 max-w-72" />
+                      : <div className="text-blue-500 text-9xl">{selectedEmoji}</div>
+                  ) : (
+                    'Select an emoji'
+                  )}
                 </div>
               </div>
               <button
