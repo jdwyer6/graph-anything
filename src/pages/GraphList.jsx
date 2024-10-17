@@ -133,8 +133,8 @@ function GraphList() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-teal-100 to-blue-100 flex flex-col items-center justify-center p-8">
-      <div className="w-full max-w-4xl bg-white rounded-3xl shadow-xl p-10">
+    <div className="min-h-screen bg-gradient-to-r from-teal-100 to-blue-100 flex flex-col items-center justify-center pb-4 md:pb-8 px-2 md:px-8 pt-16 md:pt-28">
+      <div className="w-full max-w-4xl bg-white rounded-3xl shadow-xl p-8 md:p-10">
         <h1 className="text-4xl font-extrabold text-gray-700 mb-10 text-center">My Graphs</h1>
         {error && <p className="text-red-500 text-center mb-4">{error}</p>}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -208,64 +208,66 @@ function GraphList() {
       </div>
 
       {showForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-12">
-          <div className="bg-white p-8 rounded-3xl shadow-xl w-full max-w-4xl">
-            <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">Create New Graph</h2>
-            <div className="grid gap-6 mb-8">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 sm:p-6 md:p-8 overflow-y-auto">
+          <div className="bg-white p-4 sm:p-6 md:p-8 rounded-3xl shadow-xl w-full max-w-md md:max-w-2xl lg:max-w-4xl absolute top-0 md:top-12">
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-4 sm:mb-6 text-center">Create New Graph</h2>
+            <div className="grid gap-4 sm:gap-6 mb-6 sm:mb-8">
               <div className="flex flex-col items-start">
-                <label htmlFor="newGraphTitle" className="ml-6">Graph Title</label>
+                <label htmlFor="newGraphTitle" className="ml-2 sm:ml-4">Graph Title</label>
                 <input
                   type="text"
                   required
                   placeholder="Graph Title"
-                  className="p-4 border border-gray-300 rounded-full text-center text-lg focus:outline-none focus:border-blue-400 w-full"
+                  className="p-3 sm:p-4 border border-gray-300 rounded-full text-center text-base sm:text-lg focus:outline-none focus:border-blue-400 w-full"
                   value={newGraphTitle}
                   onChange={(e) => setNewGraphTitle(e.target.value)}
                 />
               </div>
               <div className="flex flex-col items-start">
-                <label htmlFor="newGraphTitle" className="ml-6">Y-Axis Label</label>
+                <label htmlFor="newXValue" className="ml-2 sm:ml-4">Y-Axis Label</label>
                 <input
                   type="text"
                   placeholder="X-Axis Label"
-                  className="p-4 border border-gray-300 rounded-full text-center text-lg focus:outline-none focus:border-blue-400 w-full"
+                  className="p-3 sm:p-4 border border-gray-300 rounded-full text-center text-base sm:text-lg focus:outline-none focus:border-blue-400 w-full"
                   value={newXValue}
                   onChange={(e) => setNewXValue(e.target.value)}
                 />
               </div>
               <div className="flex flex-col items-start">
-                <label htmlFor="newGraphTitle" className="ml-6">X-Axis Label</label>
+                <label htmlFor="newYValue" className="ml-2 sm:ml-4">X-Axis Label</label>
                 <input
                   type="text"
                   placeholder="Y-Axis Label"
-                  className="p-4 border border-gray-300 rounded-full text-center text-lg focus:outline-none focus:border-blue-400 w-full"
+                  className="p-3 sm:p-4 border border-gray-300 rounded-full text-center text-base sm:text-lg focus:outline-none focus:border-blue-400 w-full"
                   value={newYValue}
                   onChange={(e) => setNewYValue(e.target.value)}
                 />
               </div>
-              <div className="flex items-start">
-                <div>
-                  <label htmlFor="iconSelector">Select Emoji</label>
-                  <Picker data={data} onEmojiSelect={handleEmojiSelect} custom={customEmojis}/>
-                </div>
-                <div className="w-full h-full items-center flex justify-center">
-                  {selectedEmoji ? (
-                    typeof selectedEmoji === 'string' && (selectedEmoji.startsWith('/') || selectedEmoji.startsWith('http'))
-                      ? <img src={selectedEmoji} alt="custom emoji" className="inline-block p-5 max-w-72" />
-                      : <div className="text-blue-500 text-9xl">{selectedEmoji}</div>
-                  ) : (
-                    'Select an emoji'
-                  )}
+              <div className="flex flex-col items-start w-full">
+                <label htmlFor="iconSelector" className="ml-2 sm:ml-4 mb-2">Select Emoji</label>
+                <div className="flex flex-col sm:flex-row items-center justify-between w-full">
+                  <div className="flex-1 mb-4 sm:mb-0 sm:mr-4">
+                    <Picker data={data} onEmojiSelect={handleEmojiSelect} custom={customEmojis} style={{ width: '100%' }} />
+                  </div>
+                  <div className="flex justify-center items-center w-full sm:w-auto">
+                    {selectedEmoji ? (
+                      typeof selectedEmoji === 'string' && (selectedEmoji.startsWith('/') || selectedEmoji.startsWith('http'))
+                        ? <img src={selectedEmoji} alt="custom emoji" className="inline-block p-3 max-w-24 h-auto" />
+                        : <div className="text-blue-500 text-6xl sm:text-9xl">{selectedEmoji}</div>
+                    ) : (
+                      'Select an emoji'
+                    )}
+                  </div>
                 </div>
               </div>
               <button
-                className="bg-blue-500 text-white px-6 py-4 rounded-full text-lg font-semibold hover:bg-blue-600 transition focus:outline-none shadow-lg"
+                className="bg-blue-500 text-white px-6 py-3 sm:py-4 rounded-full text-lg font-semibold hover:bg-blue-600 transition focus:outline-none shadow-lg w-full mb-4"
                 onClick={handleCreateGraph}
               >
                 Create Graph
               </button>
               <button
-                className="bg-red-500 text-white px-6 py-4 rounded-full text-lg font-semibold hover:bg-red-600 transition focus:outline-none shadow-lg"
+                className="bg-red-500 text-white px-6 py-3 sm:py-4 rounded-full text-lg font-semibold hover:bg-red-600 transition focus:outline-none shadow-lg w-full"
                 onClick={() => setShowForm(false)}
               >
                 Cancel

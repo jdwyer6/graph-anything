@@ -1,40 +1,62 @@
 // src/pages/Home.jsx
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import 'tailwindcss/tailwind.css';
 
 function Home() {
   const navigate = useNavigate();
+  const pricingRef = useRef(null);
+
+  const scrollToPricing = () => {
+    if (pricingRef.current) {
+      pricingRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const [isLoading, setIsLoading] = useState(true);
+
+  const handleImageLoad = () => {
+    setIsLoading(false);
+  };
+
 
   return (
-    <div className="min-h-screen pt-28 bg-gradient-to-r from-teal-100 to-blue-100 flex flex-col items-center justify-center p-8">
-      <div className="w-full max-w-7xl bg-white rounded-3xl shadow-2xl p-12 mb-10">
-        <h1 className="text-5xl font-extrabold text-gray-dark mb-10 text-center">
-          Welcome to Graph Anything
-        </h1>
-        <p className="text-lg text-gray-600 text-center mb-10">
-          <strong className="text-brand-primary">Track your goals</strong> effortlessly. Create beautiful, <strong className="text-brand-secondary">simple charts</strong> with <strong className="text-brand-secondary">one click</strong> —whether it's fitness, health, finances, or <strong className="text-brand-primary">any goal.</strong> Clean, easy, and motivating. <strong className="text-brand-secondary">Start today!</strong>
-        </p>
-        <div className="flex justify-center mb-10">
-          <img src="/images/demo.gif" alt="Demo" className="max-w-full" />
+    <div className="min-h-screen pb-4 md:pb-8 px-2 md:px-8 pt-16 md:pt-28 bg-gradient-to-r from-teal-100 to-blue-100 flex flex-col items-center justify-center">
+        <div className="w-full max-w-7xl bg-white rounded-3xl shadow-2xl p-6 md:p-12 mb-2 md:mb-10">
+            <h1 className="text-4xl md:text-5xl font-extrabold text-gray-dark mb-10 text-center">
+            Welcome to Graph Anything
+            </h1>
+            <p className="text-lg text-gray-600 text-center mb-10">
+            <strong className="text-brand-primary">Track your goals</strong> effortlessly. Create beautiful, <strong className="text-brand-secondary">simple charts</strong> with <strong className="text-brand-secondary">one click</strong> —whether it's fitness, health, finances, or <strong className="text-brand-primary">any goal.</strong> Clean, easy, and motivating. <strong className="text-brand-secondary">Start today!</strong>
+            </p>
+            <div className="flex justify-center mb-10">
+            {isLoading && (
+                <div className="border min-h-[395px] w-full bg-gray-300 rounded animate-pulse"></div>
+            )}
+            <img
+                src="/images/demo.gif"
+                alt="Demo"
+                className={`max-w-full rounded-lg ${isLoading ? 'hidden' : 'block'}`}
+                onLoad={handleImageLoad}
+            />
+            </div>
+            <div className="flex justify-center gap-6 flex-col md:flex-row">
+                <button
+                    className="bg-brand-primary text-white px-8 py-4 rounded-full text-xl font-semibold hover:bg-brand-primary-dark transition focus:outline-none shadow-lg"
+                    onClick={() => navigate('/signup?isSignUp=true')}
+                >
+                    Get Started
+                </button>
+                <button
+                    className="bg-brand-secondary text-white px-8 py-4 rounded-full text-xl font-semibold hover:bg-brand-secondary-dark transition focus:outline-none shadow-lg"
+                    onClick={scrollToPricing}
+                >
+                    Learn More
+                </button>
+            </div>
         </div>
-        <div className="flex justify-center gap-6">
-          <button
-            className="bg-brand-primary text-white px-8 py-4 rounded-full text-xl font-semibold hover:bg-brand-primary-dark transition focus:outline-none shadow-lg"
-            onClick={() => navigate('/signup?isSignUp=true')}
-          >
-            Get Started
-          </button>
-          <button
-            className="bg-brand-secondary text-white px-8 py-4 rounded-full text-xl font-semibold hover:bg-brand-secondary-dark transition focus:outline-none shadow-lg"
-            onClick={() => navigate('/about')}
-          >
-            Learn More
-          </button>
-        </div>
-      </div>
 
-      <div className="w-full max-w-7xl bg-white rounded-3xl shadow-2xl p-12">
+      <div ref={pricingRef} className="w-full max-w-7xl bg-white rounded-3xl shadow-2xl p-6 md:p-12">
         <h2 className="text-4xl font-extrabold text-gray-dark mb-8 text-center">Our Pricing Plans</h2>
         <div className="flex flex-col md:flex-row justify-center gap-8">
           {/* Essential Plan */}

@@ -35,7 +35,7 @@ const Header = ({ user, handleLogout }) => {
   }, [dropdownVisible]);
 
   return (
-    <div className="header absolute w-full shadow-lg bg-white flex px-12 py-4 justify-between">
+    <div className="header absolute w-full shadow-lg bg-white flex px-4 md:px-12 py-2 md:py-4 justify-between">
       <h1 className="text-3xl font-black" onClick={() => navigate('/')}>Graph Anything</h1>
       <div className="relative flex gap-2 items-center">
         {user ? (
@@ -57,8 +57,7 @@ const Header = ({ user, handleLogout }) => {
           </>
         ) : (
             <div className="flex gap-2">
-                <button className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-blue-600" onClick={() =>navigate('/signup?isSignUp=true')}>Create an Account</button>
-                <button className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-blue-600" onClick={() => navigate('/signup?isSignUp=false')}>Sign In</button>
+                <button className="bg-brand-primary text-white px-4 py-2 rounded-lg shadow-lg hover:bg-brand-primary-dark" onClick={() => navigate('/signup?isSignUp=false')}>Sign In</button>
             </div>
         )}
       </div>

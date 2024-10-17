@@ -274,8 +274,8 @@ function Graph() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-teal-100 to-blue-100 flex flex-col items-center justify-center p-8">
-      <div className="w-full bg-white rounded-3xl shadow-xl p-10 relative max-w-6xl">
+    <div className="min-h-screen bg-gradient-to-r from-teal-100 to-blue-100 flex flex-col items-center justify-center pb-4 md:pb-8 px-2 md:px-8 pt-16 md:pt-28">
+      <div className="w-full bg-white rounded-3xl shadow-xl p-8 md:p-10 relative max-w-6xl">
         <div className="absolute top-4 right-4 text-gray-500 hover:text-gray-800 cursor-pointer" onClick={(e) => {e.stopPropagation(); openSettingsModal(graph);}}><FiSettings size={24} /></div>
         <div className="absolute top-4 left-4 text-gray-500 hover:text-gray-800 cursor-pointer" onClick={() => navigate('/graphlist')}><FiArrowLeft size={24} /></div>
         <div className="flex w-full justify-center items-center gap-2">

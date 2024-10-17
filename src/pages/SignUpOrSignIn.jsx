@@ -108,10 +108,10 @@ function SignUpOrSignIn() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-teal-100 to-blue-100 flex items-center justify-center p-8">
-      <div className="w-full max-w-md bg-white rounded-3xl shadow-xl p-10 transform transition-all">
+    <div className="min-h-screen bg-gradient-to-r from-teal-100 to-blue-100 flex items-center justify-center p-4 md:p-8">
+      <div className="w-full max-w-md bg-white rounded-3xl shadow-xl p-6 md:p-10 transform transition-all">
         <h1 className="text-4xl font-extrabold text-gray-700 mb-8 text-center">
-          {isSignUp ? 'Sign Up' : 'Sign In'}
+          {isSignUp ? 'Create an Account' : 'Sign In'}
         </h1>
         {error && <p className="text-red-500 text-center mb-4">{error}</p>}
         <form onSubmit={isSignUp ? handleSignUp : handleSignIn} className="space-y-6">
