@@ -36,7 +36,7 @@ const Header = ({ user, handleLogout }) => {
 
   return (
     <div className="header absolute w-full shadow-lg bg-white flex px-4 md:px-12 py-2 md:py-4 justify-between">
-      <h1 className="text-3xl font-black" onClick={() => navigate('/')}>Graph Anything</h1>
+      <h1 className="text-3xl font-black dark:text-gray-100" onClick={() => navigate('/')}>Graph Anything</h1>
       <div className="relative flex gap-2 items-center">
         {user ? (
           <>

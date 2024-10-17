@@ -21,8 +21,8 @@ function Home() {
 
 
   return (
-    <div className="min-h-screen pb-4 md:pb-8 px-2 md:px-8 pt-16 md:pt-28 bg-gradient-to-r from-teal-100 to-blue-100 flex flex-col items-center justify-center">
-        <div className="w-full max-w-7xl bg-white rounded-3xl shadow-2xl p-6 md:p-12 mb-2 md:mb-10">
+    <div className="min-h-screen pb-4 md:pb-8 px-4 md:px-8 pt-20 md:pt-28 bg-gradient-to-r from-teal-100 to-blue-100 flex flex-col items-center justify-center">
+        <div className="w-full max-w-7xl bg-white rounded-3xl shadow-2xl p-6 md:p-12 mb-4 md:mb-10">
             <h1 className="text-4xl md:text-5xl font-extrabold text-gray-dark mb-10 text-center">
             Welcome to Graph Anything
             </h1>
