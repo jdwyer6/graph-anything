@@ -36,7 +36,7 @@ const Header = ({ user, handleLogout }) => {
 
   return (
     <div className="header absolute w-full shadow-lg bg-white flex px-4 md:px-12 py-2 md:py-4 justify-between">
-      <h1 className="text-3xl font-black dark:text-gray-100" onClick={() => navigate('/')}>Graph Anything</h1>
+      <h1 className="text-3xl font-black" onClick={() => navigate('/')}>Graph Anything</h1>
       <div className="relative flex gap-2 items-center">
         {user ? (
           <>
@@ -47,10 +47,10 @@ const Header = ({ user, handleLogout }) => {
                   {getPossessiveName(user.displayName)} Account
                 </div>
                 <ul className="py-1">
-                <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={() =>navigate('/graphlist')}>My Graphs</li>
-                  <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={() =>navigate('/')}>User Settings</li>
-                  <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={() =>navigate('/')}>Billing</li>
-                  <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={handleLogout}>Logout</li>
+                <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer dark:text-black" onClick={() =>navigate('/graphlist')}>My Graphs</li>
+                  <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer dark:text-black" onClick={() =>navigate('/')}>User Settings</li>
+                  <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer dark:text-black" onClick={() =>navigate('/')}>Billing</li>
+                  <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer dark:text-black" onClick={handleLogout}>Logout</li>
                 </ul>
               </div>
             )}

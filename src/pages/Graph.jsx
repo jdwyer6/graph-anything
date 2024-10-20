@@ -301,7 +301,7 @@ function Graph() {
           <input
             type="number"
             placeholder="Enter Y value"
-            className="p-4 border border-gray-300 rounded-full text-center text-lg focus:outline-none focus:border-blue-400 w-full"
+            className="p-4 border bg-white dark:bg-white border-gray-300 rounded-full text-center text-lg focus:outline-none focus:border-blue-400 w-full"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
           />
